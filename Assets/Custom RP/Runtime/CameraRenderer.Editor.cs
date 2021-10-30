@@ -8,6 +8,7 @@ partial class CameraRenderer
     partial void DrawUnsupportedShaders();
     partial void DrawGizmos();
     partial void PrepareForSceneWindow();
+    partial void PrepareBuffer();
 
 #if UNITY_EDITOR
     static ShaderTagId[] legacyShaderTagIds = {
@@ -58,6 +59,11 @@ partial class CameraRenderer
         {
             ScriptableRenderContext.EmitWorldGeometryForSceneView(camera);
         }
+    }
+
+    partial void PrepareBuffer()
+    {
+        buffer.name = camera.name;
     }
 
 #endif

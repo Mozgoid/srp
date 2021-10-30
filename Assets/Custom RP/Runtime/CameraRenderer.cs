@@ -8,8 +8,8 @@ public partial class CameraRenderer
     ScriptableRenderContext context;
     Camera camera;
 
-    const string BufferName = "My Render Camera";
-    CommandBuffer buffer = new CommandBuffer{name = BufferName};
+    string SampleName => buffer.name;
+    CommandBuffer buffer = new CommandBuffer();
 
     CullingResults cullingResults;
 
@@ -20,6 +20,7 @@ public partial class CameraRenderer
         this.context = context;
         this.camera = camera;
 
+        PrepareBuffer();
         PrepareForSceneWindow();
 
         if (!Cull())
@@ -35,8 +36,13 @@ public partial class CameraRenderer
     void Setup()
     {
         context.SetupCameraProperties(camera);
-        buffer.ClearRenderTarget(true, true, Color.clear);
-        buffer.BeginSample(BufferName);
+        CameraClearFlags flags = camera.clearFlags;
+        buffer.ClearRenderTarget(
+            flags <= CameraClearFlags.Depth, 
+            flags == CameraClearFlags.Color, 
+            flags == CameraClearFlags.Color ? camera.backgroundColor.linear : Color.clear);
+
+        buffer.BeginSample(SampleName);
         ExecuteBuffer();
     }
 
@@ -59,7 +65,7 @@ public partial class CameraRenderer
 
     void Submit()
     {
-        buffer.EndSample(BufferName);
+        buffer.EndSample(SampleName);
         ExecuteBuffer();
         context.Submit();
     }
