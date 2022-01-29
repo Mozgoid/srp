@@ -3,14 +3,32 @@
 
 #include "../ShaderLibrary/Common.hlsl"
 
-float4 UnlitPassVertex(float3 positionOS : POSITION) : SV_POSITION {
-    float3 positionWS = TransformObjectToWorld(positionOS.xyz);
-    float4 positionVP = TransformWorldToHClip(positionWS);
-    return positionVP;
-}
+cbuffer UnityPerMaterial {
+	float4 _BaseColor;
+};
 
-half4 UnlitPassFragment() : SV_TARGET {
-    return half4(1,1,0,0);
+struct Attrbitures {
+    float3 positionOS : POSITION;
+    UNITY_VERTEX_INPUT_INSTANCE_ID
+};
+
+struct Varyings {
+    float4 positionVP : SV_POSITION;
+    UNITY_VERTEX_INPUT_INSTANCE_ID
+};
+
+Varyings UnlitPassVertex(Attrbitures input) {
+    Varyings output;
+    UNITY_SETUP_INSTANCE_ID(input); 
+    UNITY_TRANSFER_INSTANCE_ID(input, output);
+    float3 positionWS = TransformObjectToWorld(input.positionOS.xyz);
+    output.positionVP = TransformWorldToHClip(positionWS);
+    return output;
+}
+ 
+half4 UnlitPassFragment(Varyings input) : SV_TARGET {
+    UNITY_SETUP_INSTANCE_ID(input);
+    return UNITY_ACCESS_INSTANCED_PROP(UnityPerMaterial, _BaseColor);
 }
 
 #endif
