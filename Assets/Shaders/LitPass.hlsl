@@ -3,6 +3,7 @@
 
 #include "../ShaderLibrary/Common.hlsl"
 #include "../ShaderLibrary/Surface.hlsl"
+#include "../ShaderLibrary/Light.hlsl"
 #include "../ShaderLibrary/Lightning.hlsl"
 
 TEXTURE2D(_BaseMap);
