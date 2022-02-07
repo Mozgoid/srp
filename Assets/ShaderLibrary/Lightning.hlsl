@@ -10,7 +10,11 @@ float3 GetLightning(Surface surface, Light light) {
 }
 
 float3 GetLightning(Surface surface) {
-    return GetLightning(surface, GetDirectionalLight());
+    float3 color = 0.0f;
+    for(int i = 0; i < GetDirectionalLightCount(); i++) {
+        color += GetLightning(surface, GetDirectionalLight(i));
+    }
+    return color;
 }
 
 #endif

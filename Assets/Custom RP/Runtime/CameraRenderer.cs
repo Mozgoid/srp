@@ -11,6 +11,8 @@ public partial class CameraRenderer
     string SampleName => buffer.name;
     CommandBuffer buffer = new CommandBuffer();
 
+    Lightning lightning = new Lightning();
+
     CullingResults cullingResults;
 
     static ShaderTagId  unlitShaderTagId = new ShaderTagId("SRPDefaultUnlit"),
@@ -29,6 +31,7 @@ public partial class CameraRenderer
             return;
 
         Setup();
+        lightning.Setup(context, cullingResults);
         DrawUnsupportedShaders();
         DrawVisibleGeometry(useDynamicBatching, useGPUInstancing);
         DrawGizmos();
